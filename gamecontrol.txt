@@ -1,0 +1,34 @@
+"en-GB"
+
+
+group DSAG "Game Controller v2.0"
+
+"Dependency 1" "gamecontrol.c16"
+"Dependency 2" "gamecontrol_nohh.c16"
+"Dependency 3" "gamecontrol.catalogue"
+"Dependency 4" "blnk.c16"
+"Agent Animation Gallery" "gamecontrol"
+"Agent Description" "This agent allows you to control some aspects of your game (speed, autokill, hand holding/visibility) at the simple click of a button!\n\nEnjoy! ~ Pilla"
+"Agent Animation File" "gamecontrol.c16"
+"Agent Animation Gallery" "gamecontrol"
+"Web URL" "http://creaturescaves.com/"
+"Web Label" "Pilla from Creatures Caves"
+"Remove script" "enum 1 2 36430\n	kill targ\nnext\ntarg pntr\nattr 0\nalph 0 0"
+
+"Script Count" 1
+"Script 1" @ "Game Controller v2.0 script.cos"
+
+"Agent Type" 0
+"Dependency Count" 4
+"Dependency Category 1" 2
+"Dependency Category 2" 2
+"Dependency Category 3" 7
+"Dependency Category 4" 2
+"Agent Sprite First Image" 0
+
+
+
+inline FILE "gamecontrol.c16" "gamecontrol.c16"
+inline FILE "gamecontrol.catalogue" "gamecontrol.catalogue"
+inline FILE "gamecontrol_nohh.c16" "gamecontrol_nohh.c16"
+

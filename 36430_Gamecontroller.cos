@@ -1,0 +1,318 @@
+*
+* ====== CAOS2PRAY CHUNK ======
+*
+
+*# Pray-File "gamecontrol.agents"
+*# DS-Name "Game Controller v2.0"
+*# desc = "This agent allows you to control some aspects of your game (speed, autokill, hand holding/visibility) at the simple click of a button!\n\nEnjoy! ~ Pilla"
+*# Agent Animation File = "gamecontrol.c16"
+*# Agent Sprite First Image = 0
+*# Agent Animation Gallery = "gamecontrol"
+*# Web URL = "http://creaturescaves.com/"
+*# Web Label = "Pilla from Creatures Caves"
+
+*# depend blnk.c16
+
+*# attach gamecontrol.c16 gamecontrol_nohh.c16 gamecontrol.catalogue
+
+new: comp 1 2 36430 "blnk" 1 0 9000
+imsk 8
+tick 200
+* attr invi 16 + floatable 32 = 48
+attr 48
+* Button 2: Render/Don't render
+pat: butt 2 "gamecontrol" 0 2 0 0 0 [] 1001 1
+* Button 3: Slow/Fast ticks
+pat: butt 3 "gamecontrol" 2 2 0 10 0 [] 1002 1
+* Button 4: Play/Pause
+pat: butt 4 "gamecontrol" 8 2 0 30 0 [] 1003 1
+* Button 5: Autokill off/on
+pat: butt 5 "gamecontrol" 6 2 0 20 0 [] 1004 1
+flto 0 0
+* Button 6: Toggle hand holding
+pat: butt 6 "gamecontrol_nohh" 0 2 12 0 0 [] 1006 1
+* Button 7: Toggle creature pickup
+pat: butt 7 "gamecontrol_nohh" 2 2 24 0 0 [] 1007 1
+* Button 8: Toggle hand visibility
+pat: butt 8 "gamecontrol_nohh" 4 2 36 0 0 [] 1008 1
+
+* Get the wolf status
+setv ov00 wolf 15 0
+
+setv va00 ov00
+andv va00 1
+
+part 2
+doif va00 gt 0
+	pose 0
+else
+	pose 1
+endi
+
+setv va00 ov00
+andv va00 2
+
+part 3
+doif va00 gt 0
+	pose 1
+else
+	pose 0
+endi
+
+setv va00 ov00
+andv va00 8
+
+part 4
+doif wpau eq 0
+	pose 1
+else
+	pose 0
+endi
+
+part 5
+doif va00 gt 0
+	pose 1
+else
+	pose 0
+endi
+
+
+scrp 4 0 0 13
+	inst
+	norn ownr
+	rtar 1 2 36430
+	doif targ ne null
+		part 6
+		doif pose eq 1
+			targ ownr
+			nohh
+		endi
+	endi
+endm
+
+* Snap out of no-display-render on mouse down
+scrp 1 2 36430 76
+	setv va00 wolf 15 0
+	andv va00 1
+	doif va00 eq 0
+		doif hots ne ownr
+			tick 1
+			setv ov00 wolf 14 1
+			part 2
+			pose 0
+		else
+			doif hotp ne 2
+				tick 1
+				setv ov00 wolf 14 1
+				part 2
+				pose 0
+			endi
+		endi
+	endi
+endm
+
+* Render tick
+scrp 1 2 36430 9
+	setv ov00 wolf 11 4
+* Get the wolf status
+	setv ov00 wolf 15 0
+
+	setv va00 ov00
+	andv va00 1
+	part 2
+	doif va00 gt 0
+		pose 0
+		tick 200
+	else
+		pose 1
+		tick 40
+	endi
+
+	setv va00 ov00
+	andv va00 2
+	part 3
+	doif va00 gt 0
+		pose 1
+	else
+		pose 0
+	endi
+
+	setv va00 ov00
+	andv va00 8
+	part 5
+	doif va00 gt 0
+		pose 1
+	else
+		pose 0
+	endi
+endm
+
+
+
+* Toggle rendering
+scrp 1 2 36430 1001
+* Get the wolf status
+	setv ov00 wolf 15 0
+	setv va00 ov00
+	andv va00 1
+	part 2
+	doif va00 eq 1
+		tick 40
+		pose 1
+		setv ov00 wolf 14 0
+	else
+		tick 0
+		setv ov00 wolf 14 1
+		pose 0
+	endi
+endm
+
+* Toggle fast ticks
+scrp 1 2 36430 1002
+* Get the wolf status
+	setv ov00 wolf 15 0
+	setv va00 ov00
+	andv va00 2
+	part 3
+	doif va00 gt 0
+		setv ov00 wolf 13 0
+		pose 0
+	else
+		setv ov00 wolf 13 2
+		pose 1
+	endi
+endm
+
+* Play/pause
+scrp 1 2 36430 1003
+* Get the game status
+	inst
+	doif wpau eq 0
+		part 4
+		pose 0
+		wpau 1
+		enum 1 0 0
+			doif gnus eq 2
+				paus 0
+			elif gnus eq 4
+* enable favicons
+				paus 0
+			elif gnus eq 1 and spcs eq 193
+				paus 0
+			else
+				paus 1
+			endi
+		next
+		enum 2 0 0
+			doif gnus eq 1
+* enable hand
+				paus 0
+			elif gnus eq 2
+* enable doors
+				paus 0
+			else
+				paus 1
+			endi
+		next
+		enum 3 0 0
+			doif gnus eq 2
+				paus 0
+			else
+				paus 1
+			endi
+		next
+		enum 4 0 0
+			paus 1
+		next
+		enum 1 2 6
+			paus 0
+		next
+	else
+		part 4
+		pose 1
+		wpau 0
+		enum 1 0 0
+			paus 0
+		next
+		enum 2 0 0
+			paus 0
+		next
+		enum 3 0 0
+			paus 0
+		next
+		enum 4 0 0
+			paus 0
+		next
+	endi
+endm
+
+* Toggle autokill
+scrp 1 2 36430 1004
+* Get the wolf status
+	setv ov00 wolf 15 0
+	setv va00 ov00
+	andv va00 8
+	part 5
+	doif va00 eq 8
+		setv ov00 wolf 7 0
+		pose 0
+	else
+		setv ov00 wolf 7 8
+		pose 1
+	endi
+endm
+
+scrp 1 2 36430 1006
+	part 6
+	doif pose eq 0
+		pose 1
+	else
+		pose 0
+	endi
+endm
+
+scrp 1 2 36430 1007
+	part 7
+	doif game "engine_creature_pickup_status" eq 1
+		setv game "engine_creature_pickup_status" 2
+		pose 0
+	else
+		setv game "engine_creature_pickup_status" 1
+		pose 1
+	endi
+	rgam
+
+endm
+
+* toggle hand visibility
+scrp 1 2 36430 1008
+	targ pntr
+	setv va00 attr
+	doif va00 eq 0
+		attr 16
+		alph 120 1
+		mesg writ pntr 1
+	else
+		attr 0
+		alph 0 0
+		mesg writ pntr 1
+	endi
+
+	targ ownr
+	part 8
+	doif va00 eq 16
+		pose 0
+	else
+		pose 1
+	endi
+	rgam
+
+endm
+
+rscr
+enum 1 2 36430
+	kill targ
+next
+targ pntr
+attr 0
+alph 0 0
